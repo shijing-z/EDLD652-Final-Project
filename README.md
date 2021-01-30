@@ -51,6 +51,8 @@ Is there a way to make use of the variable *variety*? The values vary too much, 
 Or should I use a dataset with more variables, such as [Anime Dataset](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-04-23) and [Coffee Ratings
 ](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-07-07)? Those two seem to be interesting  to me as well. 
 
+Another selection: [NYC Squirrel Census](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-29)
+
 
 ## Data Dictionary
 
