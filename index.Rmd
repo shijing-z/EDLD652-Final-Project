@@ -1,14 +1,25 @@
 ---
 title: "Ramen"
+runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    theme: united
+    social: menu
+    source_code: https://github.com/shijing-z/EDLD652-Final-Project.git
 ---
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(tidyverse)
+library(shiny)
+library(plotly)
+library(reactable)
 ```
+
+# Page 1 {data-icon="fa-code-branch"}
+Text. 
 
 Column {data-width=650}
 -----------------------------------------------------------------------
@@ -16,7 +27,10 @@ Column {data-width=650}
 ### Chart A
 
 ```{r}
-
+p <- mtcars %>% 
+  ggplot(aes(wt, mpg)) +
+  geom_point() 
+renderPlotly(p)
 ```
 
 Column {data-width=350}
@@ -27,6 +41,9 @@ Column {data-width=350}
 ```{r}
 
 ```
+
+Page 2
+========================
 
 ### Chart C
 
