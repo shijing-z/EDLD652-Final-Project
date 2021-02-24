@@ -27,10 +27,7 @@ Column {data-width=650}
 ### Chart A
 
 ```{r}
-p <- mtcars %>% 
-  ggplot(aes(wt, mpg)) +
-  geom_point() 
-renderPlotly(p)
+
 ```
 
 Column {data-width=350}
