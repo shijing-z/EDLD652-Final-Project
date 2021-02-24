@@ -6,6 +6,7 @@ The project will use a dataset found in the [TidyTuesday](https://github.com/rfo
 
 ## [NYC Squirrel Census](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-29)
 The data is from the [NYC Squirrel Census](https://www.thesquirrelcensus.com/).
+
 Raw data: [NY Data portal](https://data.cityofnewyork.us/Environment/2018-Central-Park-Squirrel-Census-Squirrel-Data/vfnx-vebw)
 
 Data dictionary is at the end.
