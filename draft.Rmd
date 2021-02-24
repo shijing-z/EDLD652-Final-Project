@@ -1,0 +1,43 @@
+---
+title: "data viz draft"
+author: "Shijing Zhou"
+date: "2/24/2021"
+output:
+  html_document:
+    toc: yes
+    toc_float: TRUE
+    df_print: paged
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+opts_chunk$set(echo = TRUE)
+options(scipen = 999)
+nyc_squirrels <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-29/nyc_squirrels.csv")
+```
+
+
+# Visualization 1: 
+
+```{r}
+
+```
+
+
+# Visualization 2:
+
+```{r}
+
+```
+
+
+# Visualization 3:
+
+```{r}
+
+```
+
+
