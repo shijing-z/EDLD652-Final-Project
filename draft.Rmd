@@ -14,30 +14,166 @@ editor_options:
 ```{r setup, include=FALSE}
 library(knitr)
 library(tidyverse)
+library(colorblindr)
+library(viridis)
 opts_chunk$set(echo = TRUE)
 options(scipen = 999)
 nyc_squirrels <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-29/nyc_squirrels.csv")
 ```
 
 
-# Visualization 1: 
+# Visualization 1: Squirrel's behavior by age
 
 ```{r}
+age_squirrels <- nyc_squirrels %>% 
+  select(age, running, chasing, climbing, eating, foraging) %>% 
+  group_by(age) %>% 
+  summarize(Running = sum(running, na.rm = TRUE), 
+            Chasing = sum(chasing, na.rm = TRUE), 
+            Climbing = sum(climbing, na.rm = TRUE), 
+            Eating = sum(eating, na.rm = TRUE), 
+            Foraging = sum(foraging, na.rm = TRUE)) %>% 
+  subset(age == "Adult" | age == "Juvenile") %>% 
+  pivot_longer(!age, names_to = "behavior", values_to = "count")
+
+age_squirrels %>% 
+  ggplot(aes(age, count, 
+             fill = factor(behavior),
+             group = factor(behavior))) +
+  geom_bar(stat="identity", position="fill", size=0.6) + 
+  scale_y_continuous(expand = c(0,0)) +
+  theme_classic() + 
+  scale_fill_OkabeIto() + 
+  labs(x = "Age Group",
+       y = "Proportions of Behavior",
+       fill = "Behaviors",
+       title = "Squirrel behaviors in different age groups",
+       caption = "Data from NYC Squirrel Census") + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
 
 ```
 
 
-# Visualization 2:
+# Visualization 2: Personality and tail position of squirrels 
 
 ```{r}
+tail_squirrels <- nyc_squirrels %>% 
+  select(tail_flags, tail_twitches, approaches, indifferent, runs_from) 
 
+tail_flag <- subset(tail_squirrels, tail_flags == "TRUE" & tail_twitches == "FALSE")
+tail_twitch <- subset(tail_squirrels, tail_twitches == "TRUE" & tail_flags == "FALSE")
+tail_both <- subset(tail_squirrels, tail_flags == "TRUE" & tail_twitches == "TRUE")
+tail_no_move <- subset(tail_squirrels, tail_flags == "FALSE" & tail_twitches == "FALSE")
+
+tail_flag <- tail_flag %>% 
+  summarize(Friendly = sum(approaches, na.rm = TRUE),
+            Indifferent = sum(indifferent, na.rm = TRUE),
+            Runner = sum(runs_from, na.rm = TRUE)) 
+
+tail_flag <- tail_flag %>% 
+  pivot_longer(cols = 1:3,
+               names_to = "personality",
+               values_to = "count") 
+tail_flag["tail"] <- "Flagging"
+
+
+tail_twitch <- tail_twitch %>% 
+  summarize(Friendly = sum(approaches, na.rm = TRUE),
+            Indifferent = sum(indifferent, na.rm = TRUE),
+            Runner = sum(runs_from, na.rm = TRUE)) 
+
+tail_twitch <- tail_twitch %>% 
+  pivot_longer(cols = 1:3,
+               names_to = "personality",
+               values_to = "count") 
+tail_twitch["tail"] <- "Twitching"
+
+
+tail_both <- tail_both %>% 
+  summarize(Friendly = sum(approaches, na.rm = TRUE),
+            Indifferent = sum(indifferent, na.rm = TRUE),
+            Runner = sum(runs_from, na.rm = TRUE)) 
+
+tail_both <- tail_both %>% 
+  pivot_longer(cols = 1:3,
+               names_to = "personality",
+               values_to = "count") 
+tail_both["tail"] <- "Flagging and Twitching"
+
+
+tail_no_move <- tail_no_move %>% 
+  summarize(Friendly = sum(approaches, na.rm = TRUE),
+            Indifferent = sum(indifferent, na.rm = TRUE),
+            Runner = sum(runs_from, na.rm = TRUE)) 
+
+tail_no_move <- tail_no_move %>% 
+  pivot_longer(cols = 1:3,
+               names_to = "personality",
+               values_to = "count") 
+tail_no_move["tail"] <- "No Movement"
+
+
+tail_squirrels <- rbind(tail_flag, tail_twitch, tail_both) #not including no movement because it confuses other group data
+
+#bar chart
+tail_squirrels %>% 
+  ggplot(aes(tail, count, 
+             fill = factor(personality),
+             group = factor(personality))) + 
+  geom_bar(stat="identity", position="fill", size=0.6) + 
+  scale_y_continuous(expand = c(0,0)) +
+  theme_classic() + 
+  scale_fill_OkabeIto() + 
+  labs(x = "Tail Movement",
+       y = "Proportions of Squirrel's Personality",
+       fill = "Personality",
+       title = "Personality and Tail Position of Squirrels",
+       caption = "Data from NYC Squirrel Census") + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+
+#pie chart - need more formatting with label
+tail_squirrels %>% 
+  ggplot(aes(tail, count, 
+             fill = factor(personality))) + 
+  geom_bar(stat="identity", position="fill", size=0.6) + 
+  coord_polar("y", start=0) + 
+  scale_y_continuous(expand = c(0,0)) +
+  theme_void() + 
+  scale_fill_OkabeIto() +
+  labs(x = "Tail Movement",
+       y = "Proportions of Squirrel's Personality",
+       fill = "Personality",
+       title = "Personality and Tail Position of Squirrels",
+       caption = "Data from NYC Squirrel Census") + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
 ```
 
 
-# Visualization 3:
+# Visualization 3: Geographical effect of Squirrels
 
 ```{r}
+geo_squirrels <- nyc_squirrels %>% 
+  group_by(hectare) %>% 
+  count() %>%
+  separate(hectare, 
+           into = c("north-to-south", "east-to-west"),
+           sep = "(?<=[0-9])(?=[A-Za-z])")
 
+geo_squirrels %>% 
+  ggplot(aes(`north-to-south`, `east-to-west`)) + 
+  geom_tile(aes(fill = n),
+            color = "white") + 
+  coord_fixed() +
+  scico::scale_fill_scico(palette = "tokyo") +
+  theme_classic() + 
+  labs(title = "Squirrel Observations in NYC Central Park",
+       subtitle = "Grey area represents geographical areas that with no observation of squirrels",
+       y = "East to West",
+       x = "North to South",
+       fill = "Number of Squirrels") + 
+ theme(panel.background = element_rect(fill = "light grey"),
+       legend.position = "bottom",
+       plot.title = element_text(face = "bold")) 
 ```
 
 
