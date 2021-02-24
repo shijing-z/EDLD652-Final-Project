@@ -4,66 +4,57 @@
 The project will use a dataset found in the [TidyTuesday](https://github.com/rfordatascience/tidytuesday) project repository. 
 
 
-## [Ramen Ratings](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-06-04)
-The data is from the [The Ramen Rater](https://www.theramenrater.com/resources-2/the-list/).
+## [NYC Squirrel Census](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-29)
+The data is from the [NYC Squirrel Census](https://www.thesquirrelcensus.com/).
+Raw data: [NY Data portal](https://data.cityofnewyork.us/Environment/2018-Central-Park-Squirrel-Census-Squirrel-Data/vfnx-vebw)
 
-Data dictionary is at the end of the document.
+Data dictionary is at the end.
 
 Link to the data:
 ```
-ramen_ratings <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-04/ramen_ratings.csv")
+nyc_squirrels <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-29/nyc_squirrels.csv")
 ```
-
-
-## Preliminary Ideas
-I would like to visualize a few analyses for different audience to answer different questions. 
-
-**Audience 1**: A food import company
-
-**Visualization 1 & 2** - bar graph, possibly facet by different grouping variables
-
-*Questions to answer by Visualization 1 & 2*: (*variable used*)
-
-1. Based on the average rating (*stars*), which country (*country*) has the best ramen overall (i.e., ranking of rating by countries)? 
-
-2. Based on the average rating (*stars*), what are the leading countries (*country*) for best ramens by different package style (*style*)? 
-
-**Audience 2**: Ramen lover/Customer 
-
-**Visualization 3** - not sure yet (have idea but might be repetitive)
-
-*Questions to answer in Visualization 3*: (*variable used*)
-
-3. What is the brand ranking (*stars*) by average rating (*stars*) within different countries of origin (*country*)?
-
-**Audience 3**: Ramen Companies/Brands
-
-**Visualization 4** - not sure yet (have idea but might be repetitive)
-
-*Questions to answer in Visualization 4*: (*variable used*)
-
-4. What is the most popular container style (*style*) by rating (*stars*) within different brands (*brand*)?
-
-
-## Hope to get some help from Daniel...
-Is there a way to make use of the variable *variety*? The values vary too much, and I can't figure out a way to group those values. I thought about extracting keywords, but it is hard to even extract keywords with over 3000+ observations. I think I will be able to answer some more interesting questions if I can make some use of *variety*. Otherwise those visualizations might look too similar to each other. 
-
-Or should I use a dataset with more variables, such as [Anime Dataset](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-04-23) and [Coffee Ratings
-](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-07-07)? Those two seem to be interesting  to me as well. 
-
-Another selection: [NYC Squirrel Census](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-29)
 
 
 ## Data Dictionary
 
-### `ramen_ratings.csv`
+### `nyc_squirrels.csv`
 
-|variable      |class     |description |
-|:---|:---|:----------|
-|review_number |integer   | Ramen review number, increasing from 1 |
-|brand         |character | Brand of the ramen |
-|variety       |character | The ramen variety, eg a flavor, style, ingredient |
-|style         |character | Style of container (cup, pack, tray, |bowl, box, restaurant, can, bar)
-|country       |character | Origin country of the ramen brand |
-|stars         |double    | 0-5 rating of the ramen, 5 is best, 0 is worst |
-
+|variable                                   |class     |description |
+|:---|:---|:-----------|
+|long                                       |double    | Longitude|
+|lat                                        |double    | Latitude|
+|unique_squirrel_id                         |character | Identification tag for each squirrel sightings. The tag is comprised of "Hectare ID" + "Shift" + "Date" + "Hectare Squirrel Number." |
+|hectare                                    |character | ID tag, which is derived from the hectare grid used to divide and count the park area. One axis that runs predominantly north-to-south is numerical (1-42), and the axis that runs predominantly east-to-west is roman characters (A-I).|
+|shift                                      |character | Value is either "AM" or "PM," to communicate whether or not the sighting session occurred in the morning or late afternoon. |
+|date                                       |double    | Concatenation of the sighting session day and month.|
+|hectare_squirrel_number                    |double    | Number within the chronological sequence of squirrel sightings for a discrete sighting session.|
+|age                                        |character | Value is either "Adult" or "Juvenile."|
+|primary_fur_color                          |character | Value is either "Gray," "Cinnamon" or "Black."|
+|highlight_fur_color                        |character | Discrete value or string values comprised of "Gray," "Cinnamon" or "Black."|
+|combination_of_primary_and_highlight_color |character | A combination of the previous two columns; this column gives the total permutations of primary and highlight colors observed.|
+|color_notes                                |character | Sighters occasionally added commentary on the squirrel fur conditions. These notes are provided here.|
+|location                                   |character | Value is either "Ground Plane" or "Above Ground." Sighters were instructed to indicate the location of where the squirrel was when first sighted.|
+|above_ground_sighter_measurement           |character | For squirrel sightings on the ground plane, fields were populated with a value of “FALSE.”|
+|specific_location                          |character | Sighters occasionally added commentary on the squirrel location. These notes are provided here.|
+|running                                    |logical   | Squirrel was seen running.|
+|chasing                                    |logical   | Squirrel was seen chasing.|
+|climbing                                   |logical   |  Squirrel was seen climbing.|
+|eating                                     |logical   |  Squirrel was seen eating. |
+|foraging                                   |logical   | Squirrel was seen foraging.|
+|other_activities                           |character | Other activities   |
+|kuks                                       |logical   | Squirrel was heard kukking, a chirpy vocal communication used for a variety of reasons.|
+|quaas                                      |logical   | Squirrel was heard quaaing, an elongated vocal communication which can indicate the presence of a ground predator such as a dog.|
+|moans                                      |logical   | Squirrel was heard moaning, a high-pitched vocal communication which can indicate the presence of an air predator such as a hawk.|
+|tail_flags                                 |logical   | Squirrel was seen flagging its tail. Flagging is a whipping motion used to exaggerate squirrel's size and confuse rivals or predators. Looks as if the squirrel is scribbling with tail into the air.|
+|tail_twitches                              |logical   | Squirrel was seen flagging its tail. Flagging is a whipping motion used to exaggerate squirrel's size and confuse rivals or predators. Looks as if the squirrel is scribbling with tail into the air.|
+|approaches                                 |logical   | Squirrel was seen approaching human, seeking food.|
+|indifferent                                |logical   | Squirrel was indifferent to human presence.|
+|runs_from                                  |logical   |.Squirrel was seen running from humans, seeing them as a threat.|
+|other_interactions                         |character | Sighter notes on other types of interactions between squirrels and humans.|
+|lat_long                                   |character | Combined lat long|
+|zip_codes                                  |double    | zip codes|
+|community_districts                        |double    | Community districts|
+|borough_boundaries                         |double    | Borough boundaries|
+|city_council_districts                     |double    | City council districts|
+|police_precincts                           |double    | Police precincts |
