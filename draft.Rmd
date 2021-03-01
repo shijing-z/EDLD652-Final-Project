@@ -53,6 +53,7 @@ age_squirrels %>%
 
 ```
 
+OkabeIto is also one of my favorite color platte!! I feel like if you can unstack the bars, though it would be less obvious that it is calculated based on proportion, the comparison between Adult and Juvenile squirrels will be easier to see. I can see adult squirrel forage more than the juvenile, but it become harder to compare between groups for eating and climbing. 
 
 # Visualization 2: Personality and tail position of squirrels 
 
@@ -145,9 +146,15 @@ tail_squirrels %>%
        fill = "Personality",
        title = "Personality and Tail Position of Squirrels",
        caption = "Data from NYC Squirrel Census") + 
-  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(face = "bold", hjust = 0.5)) + 
+  facet_wrap(~tail, nrow = 1)
 ```
 
+I guess I am a bit confused why the categories of tail movements are flagging, twitching, and flagging and twiching. It makes me feel that part of the data is redundant with each other. That being said, if this is what the data is, I am not sure how to imporve this. 
+
+With the bar graph, as I mentioned earlier, I still feel it might be better to unstack the bars, as the current situation makes it hard to compare among indifferent squirrels. 
+
+I really like the pie chart and I think it makes the comparisions easier. It also makes a lot of sense to plot proportions into a circle! However, there is no label for each circle, which makes it hard to understand. Also, I feel it gives the false impression that the circle outside have more data, or is somehow bigger, than the circle inside. Would you consider maybe make three circiles side by side instead? I edited the code a bit, but ultimately I am thinking about 3 circles with the same size.
 
 # Visualization 3: Geographical effect of Squirrels
 
@@ -176,4 +183,11 @@ geo_squirrels %>%
        plot.title = element_text(face = "bold")) 
 ```
 
+I think this is a great figure and geom_tile() works perfectly with NYC's naming system. The data is easy to understand as well. The only picky thing I could suggest is probably use a different color for no observation of squirrles, just to make it even more distinct from the current color palette. Otherwise I really think this is a great figure!!
 
+Three areas of strength:
+1. the palette are all very pretty and color-blind friendly.
+2. The code is very clear and clean. I understand it with no confusions. 
+3. I think this proposed a great way of using pie chart, which is usually a bit tricky to use. 
+
+I have not used subset() before and I learned from your code about how to use subset().
