@@ -28,12 +28,13 @@ nyc_squirrels <- readr::read_csv("https://raw.githubusercontent.com/rfordatascie
 age_squirrels <- nyc_squirrels %>% 
   select(age, running, chasing, climbing, eating, foraging) %>% 
   group_by(age) %>% 
-  summarize(Running = sum(running, na.rm = TRUE), 
+  summarize(.groups = "keep", # Adding .groups = "keep" removes the warning that it's only keeping the final group you list - if you link several group_by() functions with %>%, .groups = "keep" keeps all those groups for you.
+    Running = sum(running, na.rm = TRUE), 
             Chasing = sum(chasing, na.rm = TRUE), 
             Climbing = sum(climbing, na.rm = TRUE), 
             Eating = sum(eating, na.rm = TRUE), 
             Foraging = sum(foraging, na.rm = TRUE)) %>% 
-  subset(age == "Adult" | age == "Juvenile") %>% 
+  subset(age == "Adult" | age == "Juvenile") %>% # I really like this use of subset() - I haven't used it before and like it alot!
   pivot_longer(!age, names_to = "behavior", values_to = "count")
 
 age_squirrels %>% 
@@ -51,6 +52,30 @@ age_squirrels %>%
        caption = "Data from NYC Squirrel Census") + 
   theme(plot.title = element_text(face = "bold", hjust = 0.5))
 
+```
+I love this data set and I think this is a delightful vizualization! I wonder if, depending on your communication goal, you may find success flipping it to be something like this:
+
+```{r Zach suggestion for Viz1}
+prop_squirrels <- age_squirrels %>% 
+  group_by(age) %>% 
+  mutate( 
+  prop = count/sum(count)
+  )
+
+prop_squirrels %>% 
+  ggplot(aes(behavior, prop, 
+             fill = factor(age),
+             group = factor(age))) +
+  geom_bar(stat="identity", position="dodge", size=0.6) + 
+  scale_y_continuous(expand = c(0,0)) +
+  theme_classic() + 
+  scale_fill_OkabeIto() + 
+  labs(x = "Age Group",
+       y = "Proportions of Behavior",
+       fill = "Behaviors",
+       title = "Squirrel behaviors in different age groups",
+       caption = "Data from NYC Squirrel Census") + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
 ```
 
 
@@ -116,20 +141,29 @@ tail_no_move["tail"] <- "No Movement"
 tail_squirrels <- rbind(tail_flag, tail_twitch, tail_both) #not including no movement because it confuses other group data
 
 #bar chart
-tail_squirrels %>% 
-  ggplot(aes(tail, count, 
-             fill = factor(personality),
-             group = factor(personality))) + 
-  geom_bar(stat="identity", position="fill", size=0.6) + 
+# CREATING PROPORTION VARIABLE GROUPED BY THE SQUIRREL PERSONALITY
+prop_tail <- tail_squirrels %>% 
+  group_by(personality) %>% 
+  mutate( 
+  prop = count/sum(count)
+  )
+# BAR CHART
+prop_tail %>% 
+  ggplot(aes(personality, prop, 
+             fill = factor(tail),
+             group = factor(tail))) + 
+  coord_flip() +
+  geom_bar(stat="identity", position="dodge", size=0.6) + 
   scale_y_continuous(expand = c(0,0)) +
   theme_classic() + 
   scale_fill_OkabeIto() + 
-  labs(x = "Tail Movement",
+  labs(x = "Personality",
        y = "Proportions of Squirrel's Personality",
-       fill = "Personality",
+       fill = "Tail Movement",
        title = "Personality and Tail Position of Squirrels",
        caption = "Data from NYC Squirrel Census") + 
-  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(face = "bold", hjust = 0.5),
+        legend.position = "bottom")
 
 #pie chart - need more formatting with label
 tail_squirrels %>% 
@@ -145,9 +179,13 @@ tail_squirrels %>%
        fill = "Personality",
        title = "Personality and Tail Position of Squirrels",
        caption = "Data from NYC Squirrel Census") + 
-  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(face = "bold", hjust = 0.5)) + 
+  facet_wrap(~tail, nrow = 1)
 ```
 
+This is another delightful dataset and visualization - I had no idea ggplot let you map concentric pie charts! My first comment was that a reader may be confused by what each ring in the pie chart signifies, which I see you've noted in the comment above. 
+
+I played around with the bar chart above and wonder what you think of flipping the grouping variables - again, it all depends on what you're trying to communicate! I think, as a reader, I'm particularly interested in how the different personalities behave, so I wonder if flipping the bar chart to organize by personality types would be helpfuL. I recalculated the proportions to add up to 1 within each squirrel personality, which may skew perceptions of the relative population of "friendly" to "runner" squirrels. 
 
 # Visualization 3: Geographical effect of Squirrels
 
@@ -160,20 +198,29 @@ geo_squirrels <- nyc_squirrels %>%
            sep = "(?<=[0-9])(?=[A-Za-z])")
 
 geo_squirrels %>% 
-  ggplot(aes(`north-to-south`, `east-to-west`)) + 
+  ggplot(aes(`east-to-west`,`north-to-south`)) + 
   geom_tile(aes(fill = n),
             color = "white") + 
   coord_fixed() +
   scico::scale_fill_scico(palette = "tokyo") +
   theme_classic() + 
   labs(title = "Squirrel Observations in NYC Central Park",
-       subtitle = "Grey area represents geographical areas that with no observation of squirrels",
-       y = "East to West",
-       x = "North to South",
+       subtitle = "Grey area represents geographical areas that with \nno observation of squirrels",
+       y = "North to South",
+       x = "East to West",
        fill = "Number of Squirrels") + 
  theme(panel.background = element_rect(fill = "light grey"),
-       legend.position = "bottom",
+       legend.position = "right",
        plot.title = element_text(face = "bold")) 
 ```
 
+I'm running out of time on my review, but I love this plot! It's delightful! 
+The only small tweak that would improve readability that I made was switching the axes so that it matched the layout of Central Park (i.e., so that the y-axis was north-south).
+If you want, you could play with the data such that the streets (because NYC is on a grid) match up with your tiles, but I'm unsure how complicated an undertaking that is :-)
 
+Areas of strength: 
+1) The map of NYC central park is delightful and very clear!
+2) Consistently being color-blind friendly 
+3) Great title/subtitles - they're clear and very effective
+
+I learned two things from reading your code - subset() and that you can make concentric pie charts!
