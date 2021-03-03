@@ -23,6 +23,7 @@ nyc_squirrels <- readr::read_csv("https://raw.githubusercontent.com/rfordatascie
 
 
 # Visualization 1: Squirrel's behavior by age
+#Nice intro to the squirrels...I like seeing that the juveniles spend a little more time being silly and a little less time foraging, but more time eating. Sounds like our house! The color palette is pretty playful, which I think goes nicely with the data. I would consider a second representation or unstacked bars as the number of adults is so much greater than the number of the juveniles, and you can't really see it with the stacks here.
 
 ```{r}
 age_squirrels <- nyc_squirrels %>% 
@@ -116,6 +117,7 @@ tail_no_move["tail"] <- "No Movement"
 tail_squirrels <- rbind(tail_flag, tail_twitch, tail_both) #not including no movement because it confuses other group data
 
 #bar chart
+#Again, I like the playful colors for this content. We are big squirrel fans and to see them in data science is pretty fun. 
 tail_squirrels %>% 
   ggplot(aes(tail, count, 
              fill = factor(personality),
@@ -132,6 +134,8 @@ tail_squirrels %>%
   theme(plot.title = element_text(face = "bold", hjust = 0.5))
 
 #pie chart - need more formatting with label
+#This one looks cool, but I will admit that I don't really know what it is trying to convey. I guess I am having an easy time seeing the center ring of personality, but I can't see where the tail position is represented. So maybe (like you suggest) extra labels will help. But it's a really aesthetically pleasing visualization.
+
 tail_squirrels %>% 
   ggplot(aes(tail, count, 
              fill = factor(personality))) + 
@@ -150,7 +154,7 @@ tail_squirrels %>%
 
 
 # Visualization 3: Geographical effect of Squirrels
-
+#really great visualization here. Maybe consider adding in a map of the park so it is clearer that the big squirrel-free area is a pond! I wonder why some areas get so many squirrels...peanut vendors nearby? Park benches?
 ```{r}
 geo_squirrels <- nyc_squirrels %>% 
   group_by(hectare) %>% 
@@ -167,7 +171,7 @@ geo_squirrels %>%
   scico::scale_fill_scico(palette = "tokyo") +
   theme_classic() + 
   labs(title = "Squirrel Observations in NYC Central Park",
-       subtitle = "Grey area represents geographical areas that with no observation of squirrels",
+       subtitle = "Grey areas represent geographical areas with no observation of squirrels",
        y = "East to West",
        x = "North to South",
        fill = "Number of Squirrels") + 
