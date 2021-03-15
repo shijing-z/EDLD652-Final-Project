@@ -45,9 +45,13 @@ Personality and tail position of squirrels.
 Geographical effect of Squirrels.
 
 
-**Special thanks to my reviewers: **
+**Special thanks to: **
 
-*Zach*, especially for helpful code suggestions
+*Dr. Daniel Anderson* 
+
+and my reviewers:
+
+*Zach*
 
 *Wanjia*
 
